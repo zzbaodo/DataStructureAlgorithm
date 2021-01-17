@@ -13,15 +13,15 @@ const routes = [
   ["MEX", "EZE"],
   ["LIM", "BKK"],
 ]
-class Node {
-  constructor(value) {
-    this.value = value
-    this.parent = null
-  }
-  static setParent(parent) {
-    return (this.parent = parent)
-  }
-}
+// class Node {
+//   constructor(value) {
+//     this.value = value
+//     this.parent = null
+//   }
+//   static setParent(parent) {
+//     return (this.parent = parent)
+//   }
+// }
 const adjacencyList = new Map()
 
 function addNode(airport) {
@@ -29,10 +29,8 @@ function addNode(airport) {
 }
 
 function addEdge(from, to) {
-  const nodeFrom = new Node(from)
-  const nodeTo = new Node(to)
-  adjacencyList.get(nodeFrom.value).push(nodeTo)
-  adjacencyList.get(nodeTo.value).push(nodeFrom)
+  adjacencyList.get(from).push(to)
+  adjacencyList.get(to).push(from)
 }
 
 airports.forEach((airport) => addNode(airport))
@@ -47,22 +45,18 @@ function bfs(start, end) {
     const searchItem = queue.shift()
     const possibleRoutes = adjacencyList.get(searchItem)
     possibleRoutes.forEach((route) => {
-      route.parent = searchItem
-
-      if (!visited.has(route.value)) {
-        queue.push(route.value)
-        visited.add(route.value)
+      if (!visited.has(route)) {
+        queue.push(route)
+        visited.add(route)
       }
 
-      if (route.value === end) {
-        console.log(route.parent)
-        console.log(`${route.value} found`)
+      if (route === end) {
+        console.log(`${route} found`)
       }
     })
   }
 }
 bfs("PHX", "BKK")
- console.log(adjacencyList)
 let count = 0
 const dfs = (start, end, visited = new Set()) => {
   visited.add(start)
